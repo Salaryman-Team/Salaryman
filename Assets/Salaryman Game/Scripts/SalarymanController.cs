@@ -4,12 +4,17 @@ public class SalarymanController : MonoBehaviour
 {
     [SerializeField] private Collider2D standingCollider;
     [SerializeField] private Sprite standingSprite;
+    [SerializeField] private GameObject attackMelee;
+    [SerializeField] private GameObject attackRanged;
     [SerializeField] private float jumpStrength;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float rollSpeed;
     [SerializeField] private float moveSpeed;
     [SerializeField] private int maxJumps = 2;
     [SerializeField] private int currentJumps;
+    [SerializeField] private int weaponTypePrimary;
+    [SerializeField] private int weaponTypeSecondary;
+
     private bool grounded = true;
     private bool dashing = false;
     private bool canDash = true;
@@ -48,6 +53,14 @@ public class SalarymanController : MonoBehaviour
             rb.linearVelocity = new Vector2((rb.linearVelocity.x / Mathf.Abs(rb.linearVelocity.x)) * rollSpeed, 0);
             canRoll = false;
             rolling = true;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (weaponTypePrimary == 1)
+                Instantiate(attackMelee, gameObject.transform.position, gameObject.transform.rotation);
+            else if (weaponTypePrimary == 2)
+                Instantiate(attackRanged, gameObject.transform.position, gameObject.transform.rotation);
         }
     }
 
