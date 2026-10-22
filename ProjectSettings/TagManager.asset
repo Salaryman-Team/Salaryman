@@ -6,11 +6,12 @@ TagManager:
   tags:
   - bone
   - death
+  - Ground
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Background
   - Water
   - UI
   - 
