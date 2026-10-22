@@ -43,3 +43,14 @@ Different Art Styles Per Area
 
 What to Cut:
 One or Two Areas
+
+Risk:
+Different Art Styles
+Making Movement Feel Satsifying
+Making Level Design Feel Natural
+
+Team Agreement:
+Communication:Discord
+Weekly Meeting Time: Wednesday at 9am & Tuesdays/Thursdays at 4/5 pm
+Branching/Merge Rule: Inform before work begins, pull before any work, push when done, inform after done.
+When Someone Misses a Task: Get it done ASAP, other person holds you accountable
