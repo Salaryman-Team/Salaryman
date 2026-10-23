@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SalarymanController : MonoBehaviour
 {
@@ -6,6 +7,7 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private Sprite standingSprite;
     [SerializeField] private GameObject attackMelee;
     [SerializeField] private GameObject attackRanged;
+    [SerializeField] private GameObject pointer;
     [SerializeField] private float jumpStrength;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float rollSpeed;
@@ -14,13 +16,15 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private int currentJumps;
     [SerializeField] private int weaponTypePrimary;
     [SerializeField] private int weaponTypeSecondary;
-
     private bool grounded = true;
     private bool dashing = false;
     private bool canDash = true;
     private bool rolling = false;
     private bool canRoll = true;
+    private float finalAngle;
     private Vector2 moveInput;
+    private Vector3 mouseScreenPosition;
+    private Vector3 mouseWorldPosition;
     private Rigidbody2D rb;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,7 +39,8 @@ public class SalarymanController : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
         moveInput = new Vector2(moveX, moveY).normalized;
-
+        pointer.GetComponent<Rigidbody2D>().transform.position = new Vector2(rb.transform.position.x + 2, rb.transform.position.y);
+      
         if (Input.GetKeyDown(KeyCode.Space) && currentJumps > 0 && !dashing)
         {
             rb.linearVelocity = new Vector2 (rb.linearVelocityX, jumpStrength);
