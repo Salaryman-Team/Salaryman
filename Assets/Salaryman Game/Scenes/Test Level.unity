@@ -246,7 +246,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
   m_Color: {r: 0.5018867, g: 0.5018867, b: 0.5018867, a: 1}
@@ -741,6 +741,7 @@ MonoBehaviour:
   dashSpeed: 15
   rollSpeed: 15
   moveSpeed: 5
+  pointerDistance: 2
   maxJumps: 2
   currentJumps: 0
   weaponTypePrimary: 1

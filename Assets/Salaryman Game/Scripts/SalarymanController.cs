@@ -1,5 +1,7 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
+
 
 public class SalarymanController : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private float dashSpeed;
     [SerializeField] private float rollSpeed;
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float pointerDistance;
     [SerializeField] private int maxJumps = 2;
     [SerializeField] private int currentJumps;
     [SerializeField] private int weaponTypePrimary;
@@ -25,6 +28,12 @@ public class SalarymanController : MonoBehaviour
     private Vector2 moveInput;
     private Vector3 mouseScreenPosition;
     private Vector3 mouseWorldPosition;
+    private float mouseTriangleOpposite;
+    private float mouseTriangleAdjacent;
+    private float mouseTriangleRads;
+    private float mouseTriangleDegrees;
+    private float pointerX;
+    private float pointerY;
     private Rigidbody2D rb;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -67,6 +76,45 @@ public class SalarymanController : MonoBehaviour
             else if (weaponTypePrimary == 2)
                 Instantiate(attackRanged, gameObject.transform.position, gameObject.transform.rotation);
         }
+
+//Making Pointer Rotate
+        mouseScreenPosition = Input.mousePosition; // Gets raw mouse position
+        mouseScreenPosition.z = 10f;  //Have to do this otherwise the next thing works funky
+        mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);  //translates the position of the mouse on the screen into world coordinates
+        mouseWorldPosition.z = 0;  // Puts it back to even with the screen
+
+        /*This next section is explaining all the math that happens below this
+         * 
+         * When finding the angle between two points in the world, it looks like a triangle
+         * so we can use geomotry to find that angle, starting from the player, the line
+         * directly to the camera woud be the hypotenuse of the triangle, and we could find that, 
+         * but its easier to find the other two values, the opposite side of the triangle is 
+         * just the difference in the y coordinates between the player and the camera, and 
+         * the adjacent side is the difference in x coordinates. Using these two, we can 
+         * use arctan which while give us the difference in position in radians, and to get that 
+         * into degrees, which is how unity reads and writes the roation of a object, we use the unity 
+         * function Mathf.Rad2Deg which translates it for us. However it gives the degrees as a 
+         * range from -180 to 180, so if it is negative we add 360 to get true 360 degrees. After
+         * that we use euler angles (just how unity does rotation) and assign it every update.
+         * That plus 20 when actually transforming the pointer is because of some rounding errors with 
+         * unity that dont work with geomotry so I just add in 20 degrees and it works alot better.
+         */
+
+        mouseTriangleOpposite = mouseWorldPosition.y - transform.position.y;
+        mouseTriangleAdjacent = mouseWorldPosition.x - transform.position.x;
+        mouseTriangleRads = Mathf.Atan2(mouseTriangleOpposite, mouseTriangleAdjacent);
+        mouseTriangleDegrees = mouseTriangleRads * Mathf.Rad2Deg;
+        if (mouseTriangleDegrees < 0)
+            mouseTriangleDegrees += 360;
+        pointer.transform.eulerAngles = new Vector3(0f, 0f, mouseTriangleDegrees + 20);
+        Debug.Log(mouseWorldPosition);
+//Making Pointer Move Around the Player (Just finding the point of intersection on that previous triangle with a circle with a radius of pointerDistance)
+        pointerX = pointerDistance * Mathf.Cos(mouseTriangleRads) + transform.position.x;
+        pointerY= pointerDistance * Mathf.Sin(mouseTriangleRads) + transform.position.y;
+        //This just stops it from going into the floor
+        if (pointerY < transform.position.y)
+            pointerY = transform.position.y;
+        pointer.transform.position = new Vector2(pointerX, pointerY);
     }
 
     void FixedUpdate()
