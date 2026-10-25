@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UIElements;
 
 
@@ -15,6 +16,8 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private float rollSpeed;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float pointerDistance;
+    [SerializeField] private float dashReloadTime;
+    [SerializeField] private float rollReloadTime;
     [SerializeField] private int maxJumps = 2;
     [SerializeField] private int currentJumps;
     [SerializeField] private int weaponTypePrimary;
@@ -24,7 +27,6 @@ public class SalarymanController : MonoBehaviour
     private bool canDash = true;
     private bool rolling = false;
     private bool canRoll = true;
-    private float finalAngle;
     private Vector2 moveInput;
     private Vector3 mouseScreenPosition;
     private Vector3 mouseWorldPosition;
@@ -56,17 +58,20 @@ public class SalarymanController : MonoBehaviour
             currentJumps--;
             grounded = false;
         }
+
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && !grounded)
         {
             rb.linearVelocity = new Vector2((rb.linearVelocity.x / Mathf.Abs(rb.linearVelocity.x)) * dashSpeed, 0);
             canDash = false;
             dashing = true;
+            StartCoroutine(DashTimer());
         }
-        else if(Input.GetKeyDown(KeyCode.LeftShift) && canDash && grounded)
+        else if (Input.GetKeyDown(KeyCode.LeftShift) && canRoll && grounded)
         {
             rb.linearVelocity = new Vector2((rb.linearVelocity.x / Mathf.Abs(rb.linearVelocity.x)) * rollSpeed, 0);
             canRoll = false;
             rolling = true;
+            StartCoroutine(RollTimer());
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -129,10 +134,29 @@ public class SalarymanController : MonoBehaviour
         {
             grounded = true;
             canDash = true;
-            dashing = false;
-            canRoll = true;
-            rolling = false;
             currentJumps = maxJumps;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D trigger)
+    {
+        if (trigger.gameObject.CompareTag("Door"))
+        {
+            trigger.GetComponent<Color>();
+            //Current thought is check a radius around one door for another door of the same color, and teleport the player to that door
+            //Very rough thought process tho, definetley subject to change
+        }
+    }
+
+    IEnumerator DashTimer()
+    {
+        yield return new WaitForSeconds(dashReloadTime);
+        dashing = false;
+    }
+    IEnumerator RollTimer()
+    {
+        yield return new WaitForSeconds(rollReloadTime);
+        rolling = false;
+        canRoll = true;
     }
 }
