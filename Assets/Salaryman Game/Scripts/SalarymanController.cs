@@ -1,6 +1,8 @@
 using NUnit.Framework;
-using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 
@@ -18,10 +20,10 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private float pointerDistance;
     [SerializeField] private float dashReloadTime;
     [SerializeField] private float rollReloadTime;
+    [SerializeField] private float health = 10;
     [SerializeField] private int maxJumps = 2;
     [SerializeField] private int currentJumps;
-    [SerializeField] private int weaponTypePrimary;
-    [SerializeField] private int weaponTypeSecondary;
+    public int[] salaries = { 100, 200, 300, 400, 500 };
     private bool grounded = true;
     private bool dashing = false;
     private bool canDash = true;
@@ -36,10 +38,19 @@ public class SalarymanController : MonoBehaviour
     private float mouseTriangleDegrees;
     private float pointerX;
     private float pointerY;
+    private int attackCooldown = 100;
+    private int attackCooldownSecondary = 100;
+    public int bossesBeat;
+    public int weaponTypePrimary;
+    public int weaponTypeSecondary;
+    public int primaryWeaponUpgrade;
+    public int secondaryWeaponUpgrade;
     private Rigidbody2D rb;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         rb = GetComponent<Rigidbody2D>();
         currentJumps = maxJumps;
     }
@@ -74,14 +85,6 @@ public class SalarymanController : MonoBehaviour
             StartCoroutine(RollTimer());
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (weaponTypePrimary == 1)
-                Instantiate(attackMelee, gameObject.transform.position, gameObject.transform.rotation);
-            else if (weaponTypePrimary == 2)
-                Instantiate(attackRanged, gameObject.transform.position, gameObject.transform.rotation);
-        }
-
 //Making Pointer Rotate
         mouseScreenPosition = Input.mousePosition; // Gets raw mouse position
         mouseScreenPosition.z = 10f;  //Have to do this otherwise the next thing works funky
@@ -111,8 +114,8 @@ public class SalarymanController : MonoBehaviour
         mouseTriangleDegrees = mouseTriangleRads * Mathf.Rad2Deg;
         if (mouseTriangleDegrees < 0)
             mouseTriangleDegrees += 360;
-        pointer.transform.eulerAngles = new Vector3(0f, 0f, mouseTriangleDegrees + 20);
-        Debug.Log(mouseWorldPosition);
+        pointer.transform.eulerAngles = new Vector3(0f, 0f, mouseTriangleDegrees);
+        //Debug.Log(mouseWorldPosition);
 //Making Pointer Move Around the Player (Just finding the point of intersection on that previous triangle with a circle with a radius of pointerDistance)
         pointerX = pointerDistance * Mathf.Cos(mouseTriangleRads) + transform.position.x;
         pointerY= pointerDistance * Mathf.Sin(mouseTriangleRads) + transform.position.y;
@@ -120,21 +123,61 @@ public class SalarymanController : MonoBehaviour
         if (pointerY < transform.position.y)
             pointerY = transform.position.y;
         pointer.transform.position = new Vector2(pointerX, pointerY);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (weaponTypePrimary == 1 && attackCooldown > 50)
+            { 
+                Instantiate(attackMelee, gameObject.transform.position, gameObject.transform.rotation);
+                attackCooldown = 0;
+            }
+            else if (weaponTypePrimary == 2 && attackCooldown > 25)
+            {
+                Instantiate(attackRanged, pointer.transform.position, pointer.transform.rotation);
+                attackCooldown = 0;
+            }
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            if (weaponTypeSecondary == 1 && attackCooldownSecondary > 50)
+            {
+                Instantiate(attackMelee, gameObject.transform.position, gameObject.transform.rotation);
+                attackCooldownSecondary = 0;
+            }
+            else if (weaponTypeSecondary == 2 && attackCooldownSecondary > 25)
+            {
+                Instantiate(attackRanged, pointer.transform.position, pointer.transform.rotation);
+                attackCooldownSecondary = 0;
+            }
+        }
     }
 
     void FixedUpdate()
     {
         if(!dashing && !rolling)
             rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+        attackCooldown++;
+        attackCooldownSecondary++;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         if(collision.gameObject.CompareTag("Ground"))
         {
-            grounded = true;
-            canDash = true;
-            currentJumps = maxJumps;
+            RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 2), new Vector2(0, 1), float.PositiveInfinity);
+            if (hit.distance < .5f && hit.collider.gameObject.CompareTag("Ground"))
+            {
+                grounded = true;
+                canDash = true;
+                currentJumps = maxJumps;
+            }
+        }
+        else if (collision.gameObject.CompareTag("Enemy"))
+        {
+            health -= collision.gameObject.GetComponent<EnemyController>().touchingDamage;
+            if (health <= 0)
+                die();
         }
     }
 
@@ -146,6 +189,25 @@ public class SalarymanController : MonoBehaviour
             //Current thought is check a radius around one door for another door of the same color, and teleport the player to that door
             //Very rough thought process tho, definetley subject to change
         }
+        if (trigger.gameObject.CompareTag("EnemyAttack"))
+        {
+            health -= trigger.gameObject.GetComponent<AttackBehaviour>().damage;
+            Destroy(trigger.gameObject);
+            if (health <= 0)
+                die();
+        }
+    }
+
+    private void die()
+    {
+        primaryWeaponUpgrade = 0;
+        secondaryWeaponUpgrade = 0;
+        weaponTypePrimary = 0;
+        weaponTypeSecondary = 0;
+        health = 10;
+        SceneManager.LoadScene("Test Weapon Selection");
+        Destroy(pointer);
+        Destroy(gameObject);
     }
 
     IEnumerator DashTimer()
