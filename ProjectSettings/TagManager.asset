@@ -7,6 +7,7 @@ TagManager:
   - bone
   - death
   - Ground
+  - Walls
   layers:
   - Default
   - TransparentFX

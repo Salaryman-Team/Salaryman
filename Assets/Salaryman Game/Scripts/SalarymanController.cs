@@ -138,16 +138,6 @@ public class SalarymanController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D trigger)
-    {
-        if (trigger.gameObject.CompareTag("Door"))
-        {
-            trigger.GetComponent<Color>();
-            //Current thought is check a radius around one door for another door of the same color, and teleport the player to that door
-            //Very rough thought process tho, definetley subject to change
-        }
-    }
-
     IEnumerator DashTimer()
     {
         yield return new WaitForSeconds(dashReloadTime);
