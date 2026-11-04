@@ -5,7 +5,7 @@ You play as John Salaryman, who works at a large company. In order to climb thro
 # External Links
 GDD:https://docs.google.com/document/d/1Q7XfJItxk3MJIouziykuKPSYkl_lQfVbhPjml84sr88/edit?tab=t.0
 Pitch:https://docs.google.com/presentation/d/1d5arFprep4iJ359QhOVtPFDrY1A5u5YMtbiBaZqU5rw/edit   
-Demo Video:
+Demo Video:https://drive.google.com/file/d/1MaCibzldGoaECZ1SKXrhUgx0oP9xOro5/view?usp=sharing
 
 # Members
 
