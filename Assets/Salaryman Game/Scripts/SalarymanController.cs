@@ -12,6 +12,8 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private Sprite standingSprite;
     [SerializeField] private GameObject attackMelee;
     [SerializeField] private GameObject attackRanged;
+    [SerializeField] private GameObject attackRangedSpecial;
+    [SerializeField] private GameObject attackMeleeSpecial;
     [SerializeField] private GameObject pointer;
     [SerializeField] private Camera camera;
     [SerializeField] private float jumpStrength;
@@ -30,6 +32,7 @@ public class SalarymanController : MonoBehaviour
     private bool canDash = true;
     private bool rolling = false;
     private bool canRoll = true;
+    private bool immune = false;
     public bool inSelection = true;
     private Vector2 moveInput;
     private Vector3 mouseScreenPosition;
@@ -141,7 +144,7 @@ public class SalarymanController : MonoBehaviour
                 attackCooldown = 0;
             }
         }
-        else if (Input.GetMouseButtonDown(1) && !inSelection)
+        else if (Input.GetMouseButtonDown(1) && !inSelection && weaponTypeSecondary != 0)
         {
             if (weaponTypeSecondary == 1 && attackCooldownSecondary > 50)
             {
@@ -152,6 +155,19 @@ public class SalarymanController : MonoBehaviour
             {
                 Instantiate(attackRanged, pointer.transform.position, pointer.transform.rotation);
                 attackCooldownSecondary = 0;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (weaponTypePrimary == 1 && attackCooldown > 50 && primaryWeaponUpgrade <= 1)
+            {
+                //Will be implemented at a later date (soon)
+
+            }
+            else if (weaponTypePrimary == 2 && attackCooldown > 25 && primaryWeaponUpgrade <= 1)
+            {
+                Instantiate(attackRangedSpecial, pointer.transform.position, pointer.transform.rotation);
+                attackCooldown = 0;
             }
         }
     }
@@ -172,7 +188,7 @@ public class SalarymanController : MonoBehaviour
             canDash = true;
             currentJumps = maxJumps;
         }
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") && !rolling && !immune)
         {
             health -= collision.gameObject.GetComponent<EnemyController>().touchingDamage;
             if (health <= 0)
@@ -187,7 +203,7 @@ public class SalarymanController : MonoBehaviour
         else if (trigger.gameObject.CompareTag("RightDoor"))
             transform.position += Vector3.left * 5;
         
-        if (trigger.gameObject.CompareTag("EnemyAttack"))
+        if (trigger.gameObject.CompareTag("EnemyAttack") && !rolling && !immune)
         {
             health -= trigger.gameObject.GetComponent<AttackBehaviour>().damage;
             Destroy(trigger.gameObject);

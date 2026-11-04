@@ -108,8 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackBehaviour
   deathTime: 1000
-  damage: 5
-  speed: 10000
+  damage: 3
+  speed: 1000
 --- !u!50 &4710866674536677015
 Rigidbody2D:
   serializedVersion: 5

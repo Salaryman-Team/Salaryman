@@ -78,4 +78,9 @@ public class SelectionManager : MonoBehaviour
         player.GetComponent<SalarymanController>().inSelection = false;
         SceneManager.LoadScene("Test Level");
     }
+
+    public void quit()
+    {
+        Application.Quit();
+    }
 }
