@@ -21,7 +21,7 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private float pointerDistance;
     [SerializeField] private float dashReloadTime;
     [SerializeField] private float rollReloadTime;
-    [SerializeField] private float health = 10;
+    [SerializeField] public float health = 10;
     [SerializeField] private int maxJumps = 2;
     [SerializeField] private int currentJumps;
     public int[] salaries = { 100, 200, 300, 400, 500 };
@@ -30,6 +30,7 @@ public class SalarymanController : MonoBehaviour
     private bool canDash = true;
     private bool rolling = false;
     private bool canRoll = true;
+    public bool inSelection = true;
     private Vector2 moveInput;
     private Vector3 mouseScreenPosition;
     private Vector3 mouseWorldPosition;
@@ -127,7 +128,7 @@ public class SalarymanController : MonoBehaviour
             pointerY = transform.position.y;
         pointer.transform.position = new Vector2(pointerX, pointerY);
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !inSelection)
         {
             if (weaponTypePrimary == 1 && attackCooldown > 50)
             { 
@@ -140,7 +141,7 @@ public class SalarymanController : MonoBehaviour
                 attackCooldown = 0;
             }
         }
-        else if (Input.GetMouseButtonDown(1))
+        else if (Input.GetMouseButtonDown(1) && !inSelection)
         {
             if (weaponTypeSecondary == 1 && attackCooldownSecondary > 50)
             {

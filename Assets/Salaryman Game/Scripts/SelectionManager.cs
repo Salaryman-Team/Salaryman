@@ -75,6 +75,7 @@ public class SelectionManager : MonoBehaviour
     public void loadScene()
     {
         player.GetComponent<SalarymanController>().primaryWeaponUpgrade = primaryUpgrades;
+        player.GetComponent<SalarymanController>().inSelection = false;
         SceneManager.LoadScene("Test Level");
     }
 }
