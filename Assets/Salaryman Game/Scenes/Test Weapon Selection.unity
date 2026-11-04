@@ -996,6 +996,7 @@ MonoBehaviour:
   attackMelee: {fileID: 4866878121516679606, guid: 8de9280a9f721344a8a847c78c46b648, type: 3}
   attackRanged: {fileID: 4740716527941615683, guid: c89cea57727c55c46897722a49c5d8ab, type: 3}
   pointer: {fileID: 113524992}
+  camera: {fileID: 126458379}
   jumpStrength: 15
   dashSpeed: 15
   rollSpeed: 15
@@ -1012,6 +1013,7 @@ MonoBehaviour:
   weaponTypeSecondary: 0
   primaryWeaponUpgrade: 0
   secondaryWeaponUpgrade: 0
+  currentRoom: 
 --- !u!212 &384939967
 SpriteRenderer:
   serializedVersion: 3

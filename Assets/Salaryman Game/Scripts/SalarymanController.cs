@@ -13,6 +13,7 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private GameObject attackMelee;
     [SerializeField] private GameObject attackRanged;
     [SerializeField] private GameObject pointer;
+    [SerializeField] private Camera camera;
     [SerializeField] private float jumpStrength;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float rollSpeed;
@@ -45,6 +46,7 @@ public class SalarymanController : MonoBehaviour
     public int weaponTypeSecondary;
     public int primaryWeaponUpgrade;
     public int secondaryWeaponUpgrade;
+    public string currentRoom;
     private Rigidbody2D rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -62,7 +64,8 @@ public class SalarymanController : MonoBehaviour
         float moveY = Input.GetAxisRaw("Vertical");
         moveInput = new Vector2(moveX, moveY).normalized;
         pointer.GetComponent<Rigidbody2D>().transform.position = new Vector2(rb.transform.position.x + 2, rb.transform.position.y);
-      
+        camera = Camera.main;
+
         if (Input.GetKeyDown(KeyCode.Space) && currentJumps > 0 && !dashing)
         {
             rb.linearVelocity = new Vector2 (rb.linearVelocityX, jumpStrength);
@@ -162,18 +165,13 @@ public class SalarymanController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
         if(collision.gameObject.CompareTag("Ground"))
         {
-            RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 2), new Vector2(0, 1), float.PositiveInfinity);
-            if (hit.distance < .5f && hit.collider.gameObject.CompareTag("Ground"))
-            {
-                grounded = true;
-                canDash = true;
-                currentJumps = maxJumps;
-            }
+            grounded = true;
+            canDash = true;
+            currentJumps = maxJumps;
         }
-        else if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             health -= collision.gameObject.GetComponent<EnemyController>().touchingDamage;
             if (health <= 0)
@@ -183,18 +181,36 @@ public class SalarymanController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D trigger)
     {
-        if (trigger.gameObject.CompareTag("Door"))
-        {
-            trigger.GetComponent<Color>();
-            //Current thought is check a radius around one door for another door of the same color, and teleport the player to that door
-            //Very rough thought process tho, definetley subject to change
-        }
+        if (trigger.gameObject.CompareTag("LeftDoor"))
+            transform.position += Vector3.right * 5;
+        else if (trigger.gameObject.CompareTag("RightDoor"))
+            transform.position += Vector3.left * 5;
+        
         if (trigger.gameObject.CompareTag("EnemyAttack"))
         {
             health -= trigger.gameObject.GetComponent<AttackBehaviour>().damage;
             Destroy(trigger.gameObject);
             if (health <= 0)
                 die();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D trigger)
+    {
+        if (trigger.gameObject.CompareTag("VertRoom"))
+        {
+            currentRoom = trigger.gameObject.tag;
+            camera.transform.position = new Vector3(trigger.GameObject().transform.position.x, transform.position.y, -10);
+        }
+        if (trigger.gameObject.CompareTag("HorizRoom"))
+        {
+            currentRoom = trigger.gameObject.tag;
+            camera.transform.position = new Vector3(transform.position.x, trigger.GameObject().transform.position.y, -10);
+        }
+        if (trigger.gameObject.CompareTag("StaticRoom"))
+        {
+            currentRoom = trigger.gameObject.tag;
+            camera.transform.position = new Vector3(trigger.GameObject().transform.position.x, trigger.GameObject().transform.position.y, -10);
         }
     }
 
