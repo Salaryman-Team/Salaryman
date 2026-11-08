@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] public int touchingDamage;
     [SerializeField] private GameObject attack;
     [SerializeField] private GameObject player;
+    public bool canAttack = false;
     private int attackTimer = 0;
     private bool isFacingRight = true;
     private Rigidbody2D rb;
@@ -20,13 +21,16 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (attackTimer >= attackCooldown)
+        if(canAttack)
         {
-            if (isFacingRight )
-                Instantiate(attack, new Vector2(transform.position.x +1, transform.position.y), Quaternion.identity);
-            else
-                Instantiate(attack, new Vector2(transform.position.x - 1, transform.position.y), new Quaternion(0, 0, 180, 1));
-            attackTimer = 0;
+            if (attackTimer >= attackCooldown)
+            {
+                if (isFacingRight)
+                    Instantiate(attack, new Vector2(transform.position.x + 1, transform.position.y), Quaternion.identity);
+                else
+                    Instantiate(attack, new Vector2(transform.position.x - 1, transform.position.y), new Quaternion(0, 0, 180, 1));
+                attackTimer = 0;
+            }
         }
         if (!AmIAboutToWalkOffACliff())
         {

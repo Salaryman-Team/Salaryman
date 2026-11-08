@@ -18,12 +18,20 @@ public class EnemyRadiusChecker : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D trigger)
     {
-        if(trigger.CompareTag("Enemy"))
-            trigger.gameObject.SetActive(true);
+        if (trigger.CompareTag("Enemy"))
+        {
+            GameObject enemyObj = trigger.gameObject;
+            EnemyController enemyController = enemyObj.GetComponent<EnemyController>();
+            enemyController.canAttack = true;
+        }
     }
     private void OnTriggerExit2D(Collider2D trigger)
     {
         if (trigger.CompareTag("Enemy"))
-            trigger.gameObject.SetActive(false);
+        {
+            GameObject enemyObj = trigger.gameObject;
+            EnemyController enemyController = enemyObj.GetComponent<EnemyController>();
+            enemyController.canAttack = false;
+        }
     }
 }
