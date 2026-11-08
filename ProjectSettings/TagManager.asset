@@ -16,6 +16,7 @@ TagManager:
   - StaticRoom
   - VertRoom
   - HorizRoom
+  - Radius
   layers:
   - Default
   - TransparentFX
