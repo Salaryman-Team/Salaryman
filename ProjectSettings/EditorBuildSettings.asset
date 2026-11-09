@@ -18,9 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/WinScreen.unity
     guid: dc3587049f6e23c46ab509a521f49a5c
   - enabled: 1
-    path: Assets/Salaryman Game/Scenes/Test Weapon Selection.unity
+    path: Assets/Salaryman Game/Prefabs/Scenes/Test Weapon Selection.unity
     guid: b1df35aef186d384ab649cf66e3fda4a
   - enabled: 1
-    path: Assets/Salaryman Game/Scenes/Test Level.unity
+    path: Assets/Salaryman Game/Prefabs/Scenes/Test Level.unity
     guid: 129b26bb9b519d1459cc0ffd2aa6939b
   m_configObjects: {}

@@ -17,6 +17,9 @@ TagManager:
   - VertRoom
   - HorizRoom
   - Radius
+  - TopDoor
+  - BottomDoor
+  - BossRoom
   layers:
   - Default
   - TransparentFX

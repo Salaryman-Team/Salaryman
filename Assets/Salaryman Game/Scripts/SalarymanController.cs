@@ -202,6 +202,10 @@ public class SalarymanController : MonoBehaviour
             transform.position += Vector3.right * 5;
         else if (trigger.gameObject.CompareTag("RightDoor"))
             transform.position += Vector3.left * 5;
+        else if (trigger.gameObject.CompareTag("TopDoor"))
+            transform.position += Vector3.down * 5;
+        else if (trigger.gameObject.CompareTag("BottomDoor"))
+            transform.position += Vector3.up * 5;
         
         if (trigger.gameObject.CompareTag("EnemyAttack") && !rolling && !immune)
         {
@@ -223,6 +227,11 @@ public class SalarymanController : MonoBehaviour
         {
             currentRoom = trigger.gameObject.tag;
             camera.transform.position = new Vector3(transform.position.x, trigger.GameObject().transform.position.y, -10);
+        }
+        if (trigger.gameObject.CompareTag("BossRoom"))
+        {
+            currentRoom = trigger.gameObject.tag;
+            camera.transform.position = new Vector3(trigger.GameObject().transform.position.x, trigger.GameObject().transform.position.y, -10);
         }
         if (trigger.gameObject.CompareTag("StaticRoom"))
         {
