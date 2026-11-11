@@ -16,7 +16,7 @@ public class SelectionManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        moneytoSpend = player.GetComponent<SalarymanController>().salaries[player.GetComponent<SalarymanController>().bossesBeat];
+        moneytoSpend = player.GetComponent<SalarymanController>().salaries[SalarymanController.bossesBeat];
         moneyCount.text = "You have : $" + (moneytoSpend - moneySpent);
     }
 

@@ -80,7 +80,7 @@ public class EnemyController : MonoBehaviour
                 Destroy(gameObject);
                 if(gameObject.CompareTag("Boss"))
                 {
-                    player.GetComponent<SalarymanController>().bossesBeat++;
+                    SalarymanController.bossesBeat++;
                     player.GetComponent<SalarymanController>().die();
                 }
             }

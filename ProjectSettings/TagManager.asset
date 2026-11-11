@@ -21,6 +21,7 @@ TagManager:
   - BottomDoor
   - BossRoom
   - Boundry
+  - Boss
   layers:
   - Default
   - TransparentFX

@@ -49,7 +49,7 @@ public class SalarymanController : MonoBehaviour
     private int attackCooldown = 100;
     private int attackCooldownSecondary = 100;
     private int immunityCooldown = 100;
-    public int bossesBeat;
+    public static int bossesBeat;
     public int weaponTypePrimary;
     public int weaponTypeSecondary;
     public int primaryWeaponUpgrade;
@@ -258,6 +258,7 @@ public class SalarymanController : MonoBehaviour
         {
             currentRoom = trigger.gameObject.tag;
             camera.transform.position = new Vector3(trigger.GameObject().transform.position.x, trigger.GameObject().transform.position.y, -10);
+            camera.orthographicSize = 16;
         }
         if (trigger.gameObject.CompareTag("StaticRoom"))
         {

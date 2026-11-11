@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 651422289168759925}
   m_Layer: 0
   m_Name: Boss
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,6 +110,7 @@ MonoBehaviour:
   health: 100
   attackCooldown: 30
   touchingDamage: 3
+  bulletsPerAttack: 3
   attack: {fileID: 6963671064603213746, guid: 26c442065d1a41b43a4c4aa424a93fd4, type: 3}
   player: {fileID: 0}
   canAttack: 0
