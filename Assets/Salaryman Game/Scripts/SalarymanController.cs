@@ -81,21 +81,6 @@ public class SalarymanController : MonoBehaviour
             grounded = false;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && !grounded)
-        {
-            rb.linearVelocity = new Vector2((rb.linearVelocity.x / Mathf.Abs(rb.linearVelocity.x)) * dashSpeed, 0);
-            canDash = false;
-            dashing = true;
-            StartCoroutine(DashTimer());
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftShift) && canRoll && grounded)
-        {
-            rb.linearVelocity = new Vector2((rb.linearVelocity.x / Mathf.Abs(rb.linearVelocity.x)) * rollSpeed, 0);
-            canRoll = false;
-            rolling = true;
-            StartCoroutine(RollTimer());
-        }
-
 //Making Pointer Rotate
         mouseScreenPosition = Input.mousePosition; // Gets raw mouse position
         mouseScreenPosition.z = 10f;  //Have to do this otherwise the next thing works funky
@@ -134,6 +119,35 @@ public class SalarymanController : MonoBehaviour
         if (pointerY < transform.position.y)
             pointerY = transform.position.y;
         pointer.transform.position = new Vector2(pointerX, pointerY);
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && !grounded)
+        {
+            if (!(Mathf.Abs(rb.linearVelocity.x) == 0))
+            {
+                rb.linearVelocity = new Vector2((rb.linearVelocity.x / Mathf.Abs(rb.linearVelocity.x)) * dashSpeed, 0);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2((transform.position.x - pointerX) / Mathf.Abs(transform.position.x - pointerX) * dashSpeed * -1, 0);
+            }
+            canDash = false;
+            dashing = true;
+            StartCoroutine(DashTimer());
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftShift) && canRoll && grounded)
+        {
+            if (rb.linearVelocity.x != 0)
+            {
+                rb.linearVelocity = new Vector2((rb.linearVelocity.x / Mathf.Abs(rb.linearVelocity.x)) * rollSpeed, 0);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2((transform.position.x - pointerX) / Mathf.Abs(transform.position.x - pointerX) * rollSpeed * -1, 0);
+            }
+            canRoll = false;
+            rolling = true;
+            StartCoroutine(RollTimer());
+        }
 
         if (Input.GetMouseButtonDown(0) && !inSelection)
         {
