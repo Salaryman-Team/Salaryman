@@ -63,7 +63,11 @@ public class EnemyController : MonoBehaviour
             health -= (collision.gameObject.GetComponent<AttackBehaviour>().damage * (player.GetComponent<SalarymanController>().primaryWeaponUpgrade + 1));
             Destroy(collision.gameObject);
             if (health <= 0)
+            {
                 Destroy(gameObject);
+                if(gameObject.CompareTag("Boss"))
+                    player.GetComponent<SalarymanController>().bossesBeat++;
+            }
         }
     }
 
