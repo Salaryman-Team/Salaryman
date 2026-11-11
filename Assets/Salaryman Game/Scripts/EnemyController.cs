@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -66,7 +67,10 @@ public class EnemyController : MonoBehaviour
             {
                 Destroy(gameObject);
                 if(gameObject.CompareTag("Boss"))
+                {
                     player.GetComponent<SalarymanController>().bossesBeat++;
+                    player.GetComponent<SalarymanController>().die();
+                }
             }
         }
     }

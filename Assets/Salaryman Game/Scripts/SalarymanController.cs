@@ -240,7 +240,7 @@ public class SalarymanController : MonoBehaviour
         }
     }
 
-    private void die()
+    public void die()
     {
         primaryWeaponUpgrade = 0;
         secondaryWeaponUpgrade = 0;
