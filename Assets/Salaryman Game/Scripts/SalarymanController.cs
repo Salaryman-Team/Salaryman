@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
@@ -16,6 +17,7 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private GameObject attackMeleeSpecial;
     [SerializeField] private GameObject pointer;
     [SerializeField] private Camera camera;
+    [SerializeField] private LayerMask youShallNotPass;
     [SerializeField] private float jumpStrength;
     [SerializeField] private float dashSpeed;
     [SerializeField] private float rollSpeed;
@@ -23,6 +25,7 @@ public class SalarymanController : MonoBehaviour
     [SerializeField] private float pointerDistance;
     [SerializeField] private float dashReloadTime;
     [SerializeField] private float rollReloadTime;
+    [SerializeField] private float teleportDistance;
     [SerializeField] public float health = 10;
     [SerializeField] private int maxJumps = 2;
     [SerializeField] private int currentJumps;
@@ -45,6 +48,7 @@ public class SalarymanController : MonoBehaviour
     private float pointerY;
     private int attackCooldown = 100;
     private int attackCooldownSecondary = 100;
+    private int immunityCooldown = 100;
     public int bossesBeat;
     public int weaponTypePrimary;
     public int weaponTypeSecondary;
@@ -159,12 +163,22 @@ public class SalarymanController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            if (weaponTypePrimary == 1 && attackCooldown > 50 && primaryWeaponUpgrade <= 1)
+            if (weaponTypePrimary == 1 && attackCooldown > 50 && primaryWeaponUpgrade >= 1)
             {
                 //Will be implemented at a later date (soon)
+                Vector2 teleportLocation = new Vector2(teleportDistance * Mathf.Cos(mouseTriangleRads) + transform.position.x, teleportDistance * Mathf.Sin(mouseTriangleRads) + transform.position.y);
 
+                Collider2D hit = Physics2D.OverlapPoint(teleportLocation);
+                if (hit == null || !hit.gameObject.CompareTag("Boundry"))
+                {
+                    transform.position = teleportLocation;
+                }
+                immune = true;
+                Instantiate(attackMelee, gameObject.transform.position, gameObject.transform.rotation);
+                attackCooldown = 0;
+                immunityCooldown = 0;
             }
-            else if (weaponTypePrimary == 2 && attackCooldown > 25 && primaryWeaponUpgrade <= 1)
+            else if (weaponTypePrimary == 2 && attackCooldown > 25 && primaryWeaponUpgrade >= 1)
             {
                 Instantiate(attackRangedSpecial, pointer.transform.position, pointer.transform.rotation);
                 attackCooldown = 0;
@@ -178,6 +192,11 @@ public class SalarymanController : MonoBehaviour
             rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
         attackCooldown++;
         attackCooldownSecondary++;
+        immunityCooldown++;
+        if (immunityCooldown == 20)
+        {
+            immune = false;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -190,6 +209,8 @@ public class SalarymanController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy") && !rolling && !immune)
         {
+            immunityCooldown = 0;
+            immune = true;
             health -= collision.gameObject.GetComponent<EnemyController>().touchingDamage;
             if (health <= 0)
                 die();
@@ -207,12 +228,17 @@ public class SalarymanController : MonoBehaviour
         else if (trigger.gameObject.CompareTag("BottomDoor"))
             transform.position += Vector3.up * 5;
         
-        if (trigger.gameObject.CompareTag("EnemyAttack") && !rolling && !immune)
+        if (trigger.gameObject.CompareTag("EnemyAttack") && !rolling)
         {
-            health -= trigger.gameObject.GetComponent<AttackBehaviour>().damage;
+            if (!immune)
+            {
+                immunityCooldown = 0;
+                immune = true;
+                health -= trigger.gameObject.GetComponent<AttackBehaviour>().damage;
+                if (health <= 0)
+                    die();
+            }
             Destroy(trigger.gameObject);
-            if (health <= 0)
-                die();
         }
     }
 

@@ -6,10 +6,12 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private int health;
     [SerializeField] private int attackCooldown;
     [SerializeField] public int touchingDamage;
+    [SerializeField] public int bulletsPerAttack = 3;
     [SerializeField] private GameObject attack;
     [SerializeField] private GameObject player;
     public bool canAttack = false;
-    private int attackTimer = 0;
+    private int attackTimer = 10000;
+    private int attackCount = 0;
     private bool isFacingRight = true;
     private Rigidbody2D rb;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,11 +28,21 @@ public class EnemyController : MonoBehaviour
         {
             if (attackTimer >= attackCooldown)
             {
+                if (attackCount == 0)
+                {
+                    attackCooldown = attackCooldown / 6;
+                }
                 if (isFacingRight)
                     Instantiate(attack, new Vector2(transform.position.x + 1, transform.position.y), Quaternion.identity);
                 else
                     Instantiate(attack, new Vector2(transform.position.x - 1, transform.position.y), new Quaternion(0, 0, 180, 1));
                 attackTimer = 0;
+                attackCount++;
+                if (attackCount == bulletsPerAttack)
+                {
+                    attackCooldown *= 6;
+                    attackCount = 0;
+                }
             }
         }
         if (!AmIAboutToWalkOffACliff())

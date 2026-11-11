@@ -20,11 +20,12 @@ TagManager:
   - TopDoor
   - BottomDoor
   - BossRoom
+  - Boundry
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Boundry
   - Water
   - UI
   - 

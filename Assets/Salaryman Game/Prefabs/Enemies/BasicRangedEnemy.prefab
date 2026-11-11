@@ -172,7 +172,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   health: 10
-  attackCooldown: 60
+  attackCooldown: 180
   touchingDamage: 2
+  bulletsPerAttack: 3
   attack: {fileID: 6963671064603213746, guid: 26c442065d1a41b43a4c4aa424a93fd4, type: 3}
   player: {fileID: 0}
+  canAttack: 0

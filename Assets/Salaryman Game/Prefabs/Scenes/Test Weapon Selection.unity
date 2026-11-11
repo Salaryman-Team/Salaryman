@@ -338,7 +338,7 @@ Transform:
   m_GameObject: {fileID: 126458377}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.27, y: 1, z: -10}
+  m_LocalPosition: {x: 206, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -999,6 +999,9 @@ MonoBehaviour:
   attackMeleeSpecial: {fileID: 2690750548282383354, guid: 7334b715d288e2d44af910998a89002f, type: 3}
   pointer: {fileID: 113524992}
   camera: {fileID: 126458379}
+  youShallNotPass:
+    serializedVersion: 2
+    m_Bits: 8
   jumpStrength: 15
   dashSpeed: 15
   rollSpeed: 15
@@ -1006,6 +1009,7 @@ MonoBehaviour:
   pointerDistance: 2
   dashReloadTime: 0.5
   rollReloadTime: 0.5
+  teleportDistance: 4
   health: 10
   maxJumps: 2
   currentJumps: 0
