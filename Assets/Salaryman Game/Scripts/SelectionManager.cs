@@ -57,6 +57,7 @@ public class SelectionManager : MonoBehaviour
         else if (player.GetComponent<SalarymanController>().weaponTypePrimary != 2 && (moneytoSpend - moneySpent) >= 50)
         {
             player.GetComponent<SalarymanController>().weaponTypeSecondary = 2;
+            moneySpent += 50;
             moneyCount.text = "You have : $" + (moneytoSpend - moneySpent);
         }
     }

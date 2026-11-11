@@ -49,6 +49,7 @@ public class SalarymanController : MonoBehaviour
     private int attackCooldown = 100;
     private int attackCooldownSecondary = 100;
     private int immunityCooldown = 100;
+    private int specialCooldown = 0;
     public static int bossesBeat;
     public int weaponTypePrimary;
     public int weaponTypeSecondary;
@@ -177,7 +178,7 @@ public class SalarymanController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            if (weaponTypePrimary == 1 && attackCooldown > 50 && primaryWeaponUpgrade >= 1)
+            if (weaponTypePrimary == 1 && specialCooldown > 50 && primaryWeaponUpgrade >= 1)
             {
                 //Will be implemented at a later date (soon)
                 Vector2 teleportLocation = new Vector2(teleportDistance * Mathf.Cos(mouseTriangleRads) + transform.position.x, teleportDistance * Mathf.Sin(mouseTriangleRads) + transform.position.y);
@@ -192,7 +193,7 @@ public class SalarymanController : MonoBehaviour
                 attackCooldown = 0;
                 immunityCooldown = 0;
             }
-            else if (weaponTypePrimary == 2 && attackCooldown > 25 && primaryWeaponUpgrade >= 1)
+            else if (weaponTypePrimary == 2 && specialCooldown > 50 && primaryWeaponUpgrade >= 1)
             {
                 Instantiate(attackRangedSpecial, pointer.transform.position, pointer.transform.rotation);
                 attackCooldown = 0;
@@ -206,6 +207,7 @@ public class SalarymanController : MonoBehaviour
             rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
         attackCooldown++;
         attackCooldownSecondary++;
+        specialCooldown++;
         immunityCooldown++;
         if (immunityCooldown == 20)
         {
